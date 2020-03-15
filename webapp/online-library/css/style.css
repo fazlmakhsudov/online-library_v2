@@ -1,0 +1,202 @@
+.header {
+    color: red;
+    font-size: 2em;
+    width: 100%;
+    height: 15%;
+    background-image: url("../img/header.jpg");
+    text-align: center;
+    position: relative;
+}
+
+.header > * {
+    line-height: middle;
+}
+#header_text {
+    color: yellow;
+    letter-spacing: 0.2em;
+    word-spacing: 0.4em;
+    font-weight: bold;
+    font-size: 2em;
+}
+nav {
+    text-align: center;
+     color: rgba(246,246,110,0.95);
+     background: rgb(236,247,8);
+     background: linear-gradient(90deg, rgba(236,247,8,1) 0%, rgba(121,230,38,0.97) 43%, rgba(0,255,250,0.77) 100%);
+     padding: 5px;
+     width: 100%;
+     height: 10%;
+     position: relative;
+}
+
+nav div {
+  border: 1px solid #466995;
+  border-radius: 10px;
+  background: radial-gradient(circle, rgba(2,0,36,0.7) 0%, rgba(155,155,222,0.7) 50%, rgba(0,212,255,0.4) 100%);
+  margin: 40px;
+  font-size: 2em;
+  text-align: center;
+  display: inline-block;
+  width: 15%;
+}
+nav div a {
+      color:inherit;
+      text-decoration: none;
+}
+
+nav div a:hover {
+     padding: 2px 40px;
+     border: 3px solid red;
+      background: radial-gradient(circle, rgba(2,0,36,0.2) 0%, rgba(155,155,222,0.4) 80%, rgba(0,212,255,0.9) 100%);
+     color: blue;
+     font-weight: bold;
+     text-decoration: subline;
+}
+#books_ {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    background-color: Yellow;
+
+}
+.book {
+    display: inline-block;
+     margin: 1%;
+     padding: 2%;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    width: 15%;
+    text-spacing: 0.2em;
+    background: rgba(255,255,255,0.1);
+    border: 2px dashed white;
+}
+
+ #book_detail  {
+    text-align: left;
+    vertical-align: top;
+ }
+
+     #book_detail article {
+        padding-left: 5px;
+        width: 20%;
+        display: inline-block;
+        border: 2px dotted orange;
+        background: rgba(255,255,255,0.6);
+     }
+
+#book_detail article h2{
+    font-family: serif;
+    color: blue;
+    font-weight: bold;
+}
+
+    #book_detail img {
+        float: left;
+        padding-right: 2%;
+        padding-bottom: 1%;
+        padding-top: 0.7%;
+        display: inline-block;
+    }
+
+    #books_ a {
+        color:inherit;
+        text-decoration: none;
+    }
+    #books_ a:hover {
+         color: blue;
+         font-weight: bold;
+         width: 20%;
+         font-size: 1.1em;
+         border: 2px solid rgba(255,0,0,0.3);
+         background: radial-gradient(circle, rgba(222,0,36,0.9) 0%, rgba(155,15,222,0.8) 80%, rgba(0,212,155,0.9) 100%);
+    }
+
+
+    #search_div {
+        width: 100%;
+        height: 40%;
+        font-size: 3em;
+        color: white;
+        position: relative;
+     }
+     form {
+        top: 100px;
+        text-align: center;
+        background: rgba(255,255,255,0.1);
+     }
+    .form_section {
+        display: inline;
+    }
+
+    #search {
+          text-style: italic;
+          width: 400px;
+          color: blue;
+    }
+    #submit {
+
+        width: 300px;
+        height: 70px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-style: italic;
+        background: radial-gradient(circle, rgba(111,233,36,0.5) 0%, rgba(212,111,232,0.4) 80%,
+                    rgba(52,22,255,0.6) 90%, rgba(52,22,255,1) 100%);
+    }
+
+
+footer {
+    color: blue;
+    font-size: 2em;
+    background-image: url("../img/footer.jpeg");
+    width: 100%;
+
+    position: relative;
+    font-style: italic;
+    font-weight: bold;
+    top: 10px;
+    text-align: right;
+}
+
+
+#author_style {
+      display: inline-block;
+        margin: 1%;
+        padding: 2%;
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        width: 15%;
+        height: auto;
+        text-spacing: 0.2em;
+        background: rgba(255,255,255,0.1);
+        border: 2px dashed white;
+}
+#author_detail {
+   text-align: left;
+    vertical-align: top;
+    position: relative;
+}
+#author_detail article {
+        padding-left: 5px;
+        width: 20%;
+        display: inline-block;
+        border: 2px dotted orange;
+        background: rgba(255,255,255,0.6);
+     }
+
+#author_detail article h2{
+    font-family: serif;
+    color: blue;
+    font-weight: bold;
+}
+
+    #author_detail img {
+        float: left;
+        padding-right: 2%;
+        padding-bottom: 1%;
+        padding-top: 0.7%;
+        display: inline-block;
+    }

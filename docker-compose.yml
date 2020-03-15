@@ -1,0 +1,19 @@
+web:
+  image: tomcat:8.5.16-jre8-alpine
+  container_name: tomcat-container
+  ports:
+   - "9292:8080"
+  hostname: docker-tomcat
+  volumes:
+   - ./webappps:/usr/local/tomcat/webapps/
+  links:
+   - db
+db:
+  image: mysql:latest
+  container_name: mysql-container
+  environment:
+   MYSQL_ROOT_PASSWORD: 123456mfh
+  volumes:
+   - ./dump/:/docker-entrypoint-initdb.d/
+
+
