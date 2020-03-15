@@ -5,7 +5,7 @@ web:
    - "9292:8080"
   hostname: docker-tomcat
   volumes:
-   - ./webappps:/usr/local/tomcat/webapps/
+   - ./webapp:/usr/local/tomcat/webapps/
   links:
    - db
 db:
