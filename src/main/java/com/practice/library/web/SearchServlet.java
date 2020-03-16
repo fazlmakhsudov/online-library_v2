@@ -4,6 +4,8 @@ import com.practice.library.entity.Author;
 import com.practice.library.entity.Book;
 import com.practice.library.repository.impl.MySQLAuthorRepositoryImpl;
 import com.practice.library.repository.impl.MySQLBookRepositoryImpl;
+import com.practice.library.service.AuthorService;
+import com.practice.library.service.BookService;
 import com.practice.library.service.impl.AuthorServiceImpl;
 import com.practice.library.service.impl.BookServiceImpl;
 import com.practice.library.util.Path;
@@ -21,6 +23,9 @@ import java.sql.SQLException;
         urlPatterns = "/search"
 )
 public class SearchServlet extends HttpServlet {
+    private AuthorService authorService = new AuthorServiceImpl(new MySQLAuthorRepositoryImpl());
+    private BookService bookService = new BookServiceImpl(new MySQLBookRepositoryImpl());
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         super.doGet(request, response);
@@ -50,14 +55,14 @@ public class SearchServlet extends HttpServlet {
         }
         String refer_to_page = Path.SEARCH_BY_NAME_PAGE;
         name = name.trim();
-        Book book = (new BookServiceImpl(new MySQLBookRepositoryImpl())).find(name);
+        Book book = bookService.find(name);
         if (book != null) {
             request.setAttribute("book", book);
             refer_to_page = Path.BOOK_DETAIL_PAGE;
             request.setAttribute("refer_to_page", refer_to_page);
             return request;
         }
-        Author author = (new AuthorServiceImpl(new MySQLAuthorRepositoryImpl())).find(name);
+        Author author = authorService.find(name);
         if (author != null) {
             request.setAttribute("author", author);
             refer_to_page = Path.AUTHOR_DETAIL_PAGE;
