@@ -1,10 +1,10 @@
-package mfh.faztech.online_library.web;
+package com.practice.library.web;
 
-import mfh.faztech.online_library.entity.Book;
-import mfh.faztech.online_library.repository.impl.MySQLBookRepositoryImpl;
-import mfh.faztech.online_library.service.BookService;
-import mfh.faztech.online_library.service.impl.BookServiceImpl;
-import mfh.faztech.online_library.util.Path;
+import com.practice.library.entity.Book;
+import com.practice.library.repository.impl.MySQLBookRepositoryImpl;
+import com.practice.library.service.BookService;
+import com.practice.library.service.impl.BookServiceImpl;
+import com.practice.library.util.Path;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,9 +19,9 @@ import java.sql.SQLException;
         urlPatterns = "/books"
 )
 public class BookServlet extends HttpServlet {
-    private static BookService bookService = new BookServiceImpl(new MySQLBookRepositoryImpl());
+    private BookService bookService = new BookServiceImpl(new MySQLBookRepositoryImpl());
 
-    public static BookService getBookService() {
+    public BookService getBookService() {
         return bookService;
     }
 
@@ -63,7 +63,7 @@ public class BookServlet extends HttpServlet {
                 Book book = bookService.find(id);
                 request.setAttribute("book", book);
                 refer_to_page = Path.BOOK_DETAIL_PAGE;
-                    break;
+                break;
             default:
                 break;
         }

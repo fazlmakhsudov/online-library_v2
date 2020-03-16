@@ -1,7 +1,7 @@
-package mfh.faztech.online_library.service;
+package com.practice.library.service;
 
 
-import mfh.faztech.online_library.entity.Author;
+import com.practice.library.entity.Author;
 
 import java.sql.SQLException;
 

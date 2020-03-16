@@ -1,4 +1,4 @@
-package mfh.faztech.online_library.repository;
+package com.practice.library.repository;
 
 
 import java.sql.SQLException;

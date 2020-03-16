@@ -1,9 +1,9 @@
-package mfh.faztech.online_library.repository.impl;
+package com.practice.library.repository.impl;
 
 
-import mfh.faztech.online_library.entity.Book;
-import mfh.faztech.online_library.repository.BookRepository;
-import mfh.faztech.online_library.util.DBUtil;
+import com.practice.library.entity.Book;
+import com.practice.library.repository.BookRepository;
+import com.practice.library.util.DBUtil;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -74,9 +74,9 @@ public class MySQLBookRepositoryImpl implements BookRepository {
             LocalDate localDate = LocalDate.parse(date.toString());
             book = new Book(id, name, description, localDate);
         }
-        sql = "SELECT relation_table.author_id, author.name FROM relation_table cross join author on author.id = relation_table.author_id where relation_table.book_id = "+id;
+        sql = "SELECT relation_table.author_id, author.name FROM relation_table cross join author on author.id = relation_table.author_id where relation_table.book_id = " + id;
         statement = dbUtil.getJdbcConnection().prepareStatement(sql);
-   //     statement.setInt(1, id);
+        //     statement.setInt(1, id);
         System.out.println("*** 2");
         resultSet = statement.executeQuery(sql);
         while (resultSet.next()) {
@@ -112,7 +112,7 @@ public class MySQLBookRepositoryImpl implements BookRepository {
         sql = "SELECT relation_table.author_id, author.name FROM relation_table cross join author on author.id = relation_table.author_id " +
                 "where relation_table.book_id = " + book.getId() + ";";
         statement = dbUtil.getJdbcConnection().prepareStatement(sql);
-     //   statement.setInt(1, book.getId());
+        //   statement.setInt(1, book.getId());
         resultSet = statement.executeQuery(sql);
         while (resultSet.next()) {
             int author_id = resultSet.getInt("author_id");

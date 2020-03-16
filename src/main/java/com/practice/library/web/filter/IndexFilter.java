@@ -1,6 +1,6 @@
-package mfh.faztech.online_library.web.filter;
+package com.practice.library.web.filter;
 
-import mfh.faztech.online_library.util.Path;
+import com.practice.library.util.Path;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;

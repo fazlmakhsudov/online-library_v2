@@ -1,9 +1,9 @@
-package mfh.faztech.online_library.service.impl;
+package com.practice.library.service.impl;
 
 
-import mfh.faztech.online_library.entity.Book;
-import mfh.faztech.online_library.repository.BookRepository;
-import mfh.faztech.online_library.service.BookService;
+import com.practice.library.entity.Book;
+import com.practice.library.repository.BookRepository;
+import com.practice.library.service.BookService;
 
 import java.sql.SQLException;
 import java.util.List;

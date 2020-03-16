@@ -12,7 +12,7 @@
 <c:import url="header.jsp" />
 <div class="container">
   <h2>Type name of searched one below in the form</h2>
-  <form action="/online-library/search" method = "POST">
+  <form action="/library/search" method = "POST">
      <div class="form-group">
         <label for="search">Name</label>
         <input class="form-control input-lg" id="search" name="name"

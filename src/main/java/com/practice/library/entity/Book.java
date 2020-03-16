@@ -1,4 +1,4 @@
-package mfh.faztech.online_library.entity;
+package com.practice.library.entity;
 
 import java.time.LocalDate;
 import java.util.HashMap;

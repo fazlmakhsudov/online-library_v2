@@ -1,8 +1,12 @@
-package mfh.faztech.online_library.web;
+package com.practice.library.web;
 
-import mfh.faztech.online_library.entity.Author;
-import mfh.faztech.online_library.entity.Book;
-import mfh.faztech.online_library.util.Path;
+import com.practice.library.entity.Author;
+import com.practice.library.entity.Book;
+import com.practice.library.repository.impl.MySQLAuthorRepositoryImpl;
+import com.practice.library.repository.impl.MySQLBookRepositoryImpl;
+import com.practice.library.service.impl.AuthorServiceImpl;
+import com.practice.library.service.impl.BookServiceImpl;
+import com.practice.library.util.Path;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -46,14 +50,14 @@ public class SearchServlet extends HttpServlet {
         }
         String refer_to_page = Path.SEARCH_BY_NAME_PAGE;
         name = name.trim();
-        Book book = BookServlet.getBookService().find(name);
+        Book book = (new BookServiceImpl(new MySQLBookRepositoryImpl())).find(name);
         if (book != null) {
             request.setAttribute("book", book);
             refer_to_page = Path.BOOK_DETAIL_PAGE;
             request.setAttribute("refer_to_page", refer_to_page);
             return request;
         }
-        Author author = AuthorServlet.getAuthorService().find(name);
+        Author author = (new AuthorServiceImpl(new MySQLAuthorRepositoryImpl())).find(name);
         if (author != null) {
             request.setAttribute("author", author);
             refer_to_page = Path.AUTHOR_DETAIL_PAGE;

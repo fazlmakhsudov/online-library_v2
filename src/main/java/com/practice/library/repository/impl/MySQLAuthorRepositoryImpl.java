@@ -1,9 +1,9 @@
-package mfh.faztech.online_library.repository.impl;
+package com.practice.library.repository.impl;
 
 
-import mfh.faztech.online_library.entity.Author;
-import mfh.faztech.online_library.repository.AuthorRepository;
-import mfh.faztech.online_library.util.DBUtil;
+import com.practice.library.entity.Author;
+import com.practice.library.repository.AuthorRepository;
+import com.practice.library.util.DBUtil;
 
 import java.sql.*;
 import java.time.LocalDate;

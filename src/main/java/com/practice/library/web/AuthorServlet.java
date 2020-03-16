@@ -1,10 +1,10 @@
-package mfh.faztech.online_library.web;
+package com.practice.library.web;
 
-import mfh.faztech.online_library.entity.Author;
-import mfh.faztech.online_library.repository.impl.MySQLAuthorRepositoryImpl;
-import mfh.faztech.online_library.service.AuthorService;
-import mfh.faztech.online_library.service.impl.AuthorServiceImpl;
-import mfh.faztech.online_library.util.Path;
+import com.practice.library.entity.Author;
+import com.practice.library.repository.impl.MySQLAuthorRepositoryImpl;
+import com.practice.library.service.AuthorService;
+import com.practice.library.service.impl.AuthorServiceImpl;
+import com.practice.library.util.Path;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,9 +19,9 @@ import java.sql.SQLException;
         urlPatterns = "/authors"
 )
 public class AuthorServlet extends HttpServlet {
-    private static AuthorService authorService = new AuthorServiceImpl(new MySQLAuthorRepositoryImpl());
+    private AuthorService authorService = new AuthorServiceImpl(new MySQLAuthorRepositoryImpl());
 
-    public static AuthorService getAuthorService() {
+    public AuthorService getAuthorService() {
         return authorService;
     }
 

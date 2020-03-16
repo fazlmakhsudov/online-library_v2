@@ -1,4 +1,4 @@
-package mfh.faztech.online_library.util;
+package com.practice.library.util;
 
 public class Path {
     public final static String MAIN_PAGE = "jsp/main_page.jsp";

@@ -23,7 +23,7 @@
        <c:forEach var="book" items="${list_books}">
            <c:set var="raw_count" value="${raw_count + 1}" scope="page"/>
            <div class="col-sm-4">
-                <img src="/online-library/img/book2.jpeg" class="img-thumbnail" alt="no image" />
+                <img src="/library/img/book2.jpeg" class="img-thumbnail" alt="no image" />
                 <h3 class ="text-center">
                     <a href="books?id=<c:out value='${book.id}' />">
                         <c:out value="${book.name}"/>

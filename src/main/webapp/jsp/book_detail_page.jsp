@@ -13,7 +13,7 @@
 <div class="container">
   <h2>Image</h2>
   <p>The .img-thumbnail class creates a thumbnail of the image:</p>
-  <img src="/online-library/img/book.jpeg" class="img-thumbnail" alt="no image" />
+  <img src="/library/img/book.jpeg" class="img-thumbnail" alt="no image" />
   <div class="container" >
     <c:if test="${book != null}">
         <h2>Table</h2>
@@ -41,7 +41,7 @@
               <td>Authors:</td>
               <td>
                 <c:forEach var="author" items="${book.authors}">
-                   <a href="/online-library/authors?id=<c:out value='${author.key}' />">
+                   <a href="/library/authors?id=<c:out value='${author.key}' />">
                       <c:out value="${author.value}"/>
                    </a>
                    <span>, </span>

@@ -1,4 +1,4 @@
-package mfh.faztech.online_library.util;
+package com.practice.library.util;
 
 import java.util.logging.Logger;
 
@@ -13,7 +13,7 @@ public class DBInfo {
         jdbcURL = "jdbc:mysql://db:3306/new_db";
         jdbcUsername = "root";
         jdbcPassword = "123456mfh";
-        logger.info(logger.getName() + " - static block " + jdbcURL + "  " + jdbcUsername + "  " + jdbcPassword);;
+        logger.info(logger.getName() + " - static block " + jdbcURL + "  " + jdbcUsername + "  " + jdbcPassword);
     }
 
     public static String getJdbcURL() {

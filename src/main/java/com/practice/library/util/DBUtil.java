@@ -1,4 +1,4 @@
-package mfh.faztech.online_library.util;
+package com.practice.library.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -30,21 +30,21 @@ public class DBUtil {
 
     public void connect() throws SQLException {
         if (jdbcConnection == null || jdbcConnection.isClosed()) {
-            DBInfo.logger.info("F%  DbUtil  connect() -> if()" );
+            DBInfo.logger.info("F%  DbUtil  connect() -> if()");
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                DBInfo.logger.info("F%  DbUtil  connect() -> try{}" );
+                DBInfo.logger.info("F%  DbUtil  connect() -> try{}");
             } catch (ClassNotFoundException e) {
-                DBInfo.logger.info("F%  DbUtil  connect() -> catch()" );
+                DBInfo.logger.info("F%  DbUtil  connect() -> catch()");
                 throw new SQLException(e);
 
             }
-            DBInfo.logger.info("F%  DbUtil  connect() before DriverManager getConnection" );
+            DBInfo.logger.info("F%  DbUtil  connect() before DriverManager getConnection");
             jdbcConnection = DriverManager.getConnection(
                     jdbcURL, jdbcUsername, jdbcPassword);
             DBInfo.logger.info("F%  DbUtil  connect() -> jdbcConnection " + jdbcConnection.isClosed());
             DBInfo.logger.info("F%  DbUtil  connect() -> jdbcConnecton " + jdbcConnection.toString() + "\n" +
-                     jdbcConnection.getMetaData());
+                    jdbcConnection.getMetaData());
         }
     }
 

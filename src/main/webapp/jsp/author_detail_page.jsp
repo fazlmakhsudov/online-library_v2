@@ -18,7 +18,7 @@
     <div class="media">
       <h2>Author detailed information</h2>
       <div class="media-left">
-        <img src="/online-library/img/author2.jpeg" class="img-rounded" alt="no image" />
+        <img src="/library/img/author2.jpeg" class="img-rounded" alt="no image" />
       </div>
       <div class="media-body" >
         <c:if test="${author != null}">
@@ -46,7 +46,7 @@
                   <td>Books</td>
                   <td>
                     <c:forEach var="book" items="${author.books}">
-                       <a href="/online-library/books?id=<c:out value='${book.key}' />">
+                       <a href="/library/books?id=<c:out value='${book.key}' />">
                           <c:out value="${book.value}"/>
                        </a>
                        <span>, </span>
