@@ -1,19 +1,38 @@
-web:
-  image: tomcat:8.5.16-jre8-alpine
-  container_name: tomcat-container
-  ports:
-   - "9292:8080"
-  hostname: docker-tomcat
-  volumes:
-   - ./webapp:/usr/local/tomcat/webapps/
-  links:
-   - db
-db:
-  image: mysql:latest
-  container_name: mysql-container
-  environment:
-   MYSQL_ROOT_PASSWORD: 123456mfh
-  volumes:
-   - ./dump/:/docker-entrypoint-initdb.d/
+version: '3'
+services:
 
+    #Tomcat
+  webserver:
+    image: tomcat:latest
+    container_name: webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "9096:8080"
+    volumes:
+     - ./webapp:/usr/local/tomcat/webapps/
+    networks:
+      - app-network
 
+  #MySQL Service
+  db:
+    image: mysql:latest
+    container_name: db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "6164:3306"
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: 123456mfh
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+        - ./dump/:/docker-entrypoint-initdb.d/
+    networks:
+      - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
