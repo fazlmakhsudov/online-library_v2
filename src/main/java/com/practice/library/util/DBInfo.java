@@ -15,8 +15,11 @@ public class DBInfo {
     static {
         jdbcURL = "jdbc:mysql://db:3306/new_db";
         jdbcUsername = "root";
-        jdbcPassword = "123456mfh";
         logger.log(Level.INFO, "{0} - static block {1}   {2}   {3}", new String[]{logger.getName(), jdbcURL, jdbcUsername, jdbcPassword});
+    }
+
+    public static void setJdbcPassword(String jdbcPassword) {
+        DBInfo.jdbcPassword = jdbcPassword;
     }
 
     public static String getJdbcURL() {

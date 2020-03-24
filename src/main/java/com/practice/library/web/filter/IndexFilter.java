@@ -1,17 +1,23 @@
 package com.practice.library.web.filter;
 
+import com.practice.library.util.DBInfo;
 import com.practice.library.util.Path;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
-@WebFilter(filterName = "indexFilter", urlPatterns = {"/"})
+@WebFilter(filterName = "indexFilter", urlPatterns = {"/"},
+        initParams = @WebInitParam(name = "password", value = "123456mfh"))
 public class IndexFilter implements Filter {
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
         // No necessity to implement until
+        Optional<String> optional = Optional.of(filterConfig.getInitParameter("password"));
+        DBInfo.setJdbcPassword(optional.orElse("nopassword"));
     }
 
     @Override
