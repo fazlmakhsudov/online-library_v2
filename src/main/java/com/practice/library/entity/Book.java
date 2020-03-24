@@ -20,7 +20,6 @@ public class Book {
         this.name = name;
         this.description = description;
         this.dateOfPublish = dateOfPublish;
-        this.authors = authors;
     }
 
     public int getId() {

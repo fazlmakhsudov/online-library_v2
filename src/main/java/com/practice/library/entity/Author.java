@@ -21,7 +21,6 @@ public class Author {
         this.name = name;
         this.secondName = secondName;
         this.dateOfBirth = dateOfBirth;
-        this.books = books;
     }
 
     public int getId() {

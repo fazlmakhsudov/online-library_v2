@@ -11,6 +11,7 @@ import java.io.IOException;
 public class IndexFilter implements Filter {
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
+        // No necessity to implement until
     }
 
     @Override
@@ -22,5 +23,6 @@ public class IndexFilter implements Filter {
 
     @Override
     public void destroy() {
+        // No necessity to implement until
     }
 }

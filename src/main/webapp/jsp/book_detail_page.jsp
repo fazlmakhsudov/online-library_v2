@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Book detail page</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,23 +11,24 @@
 <body>
 <c:import url="header.jsp" />
 <div class="container">
-  <h2>Image</h2>
-  <p>The .img-thumbnail class creates a thumbnail of the image:</p>
   <img src="/library/img/book.jpeg" class="img-thumbnail" alt="no image" />
   <div class="container" >
     <c:if test="${book != null}">
-        <h2>Table</h2>
+
+	<!--Book detailed page-->
         <table class="table table-hover">
+          <caption><h2>Book detailed information</h2></caption>
           <thead>
             <tr>
-              <th>Book id</th>
-              <th><c:out value="${book.id}"/></th>
+              <th scope="raw">Book id</th>
+              <th scope="raw"><c:out value="${book.id}"/></th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>Name</td>
-              <td><c:out value="${book.name}"/></td>
+              <td><c:out value="${book.name}"/></td>+
+
             </tr>
             <tr>
               <td>Description</td>

@@ -5,82 +5,61 @@ import com.practice.library.entity.Author;
 import com.practice.library.repository.AuthorRepository;
 import com.practice.library.util.DBUtil;
 
+import java.sql.Date;
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 
 public class MySQLAuthorRepositoryImpl implements AuthorRepository {
+    private static final String BOOK_ID = "book_id";
+    private static final String AUTHOR_ID = "author_id";
+    private static final String NAME = "name";
+    private static final String SECOND_NAME = "second_name";
+    private static final String DATE_OF_BIRTH = "date_of_birth";
+    private static final String ID = "id";
 
 
     private final DBUtil dbUtil = DBUtil.getInstance();
 
 
-    public boolean create(String email, String password) throws SQLException {
-        String sql = "INSERT INTO author (name, password, email, role) VALUES (?, ?, ?, ?)";
-        dbUtil.connect();
-
-        PreparedStatement statement = dbUtil.getJdbcConnection().prepareStatement(sql);
-        statement.setString(1, email.replaceFirst("@.+", ""));
-        statement.setString(2, password);
-        statement.setString(3, email);
-        boolean rowInserted = statement.executeUpdate() > 0;
-        statement.close();
-        dbUtil.disconnect();
-        return rowInserted;
-    }
-
     @Override
-    public int create(Author author) throws SQLException {
-        String sql = "INSERT INTO author (name, password, email, role) VALUES (?, ?, ?, ?)";
-        dbUtil.connect();
-
-        PreparedStatement statement = dbUtil.getJdbcConnection().prepareStatement(sql);
-        statement.setString(1, author.getName());
-        boolean rowInserted = statement.executeUpdate() > 0;
-        statement.close();
-        dbUtil.disconnect();
-        if (rowInserted) {
-            return author.getId();
-        }
-        return -1;
+    public int create(Author item) throws SQLException {
+        return 0;
     }
 
     @Override
     public Author read(int id) throws SQLException {
-        Author author = null;
+        Optional<Author> optionalAuthor = Optional.empty();
         String sql = "SELECT * FROM author WHERE id = ?";
 
         dbUtil.connect();
 
-        PreparedStatement statement = dbUtil.getJdbcConnection().prepareStatement(sql);
-        statement.setInt(1, id);
-
-        ResultSet resultSet = statement.executeQuery();
-
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            String description = resultSet.getString("second_name");
-            Date date = resultSet.getDate("date_of_birth");
-            LocalDate dateOfBirth = LocalDate.parse(date.toString());
-            author = new Author(id, name, description, dateOfBirth);
+        try (PreparedStatement statement = dbUtil.getJdbcConnection().prepareStatement(sql)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    String authorName = resultSet.getString(NAME);
+                    String description = resultSet.getString(SECOND_NAME);
+                    Date date = resultSet.getDate(DATE_OF_BIRTH);
+                    LocalDate dateOfBirth = LocalDate.parse(date.toString());
+                    optionalAuthor = Optional.of(new Author(id, authorName, description, dateOfBirth));
+                }
+            }
         }
         sql = "SELECT relation_table.book_id, book.name FROM relation_table cross join book on book.id = relation_table.book_id " +
                 "where relation_table.author_id = " + id + ";";
-        statement = dbUtil.getJdbcConnection().prepareStatement(sql);
-//        statement.setInt(1, id);
-        resultSet = statement.executeQuery(sql);
-        while (resultSet.next()) {
-            int book_id = resultSet.getInt("book_id");
-            String book_name = resultSet.getString("name");
-            author.getBooks().put(book_id, book_name);
+        try (Statement statement = dbUtil.getJdbcConnection().createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+            while (resultSet.next()) {
+                int bookId = resultSet.getInt(BOOK_ID);
+                String bookName = resultSet.getString(NAME);
+                optionalAuthor.orElse(new Author()).getBooks().put(bookId, bookName);
+            }
         }
-        resultSet.close();
-        statement.close();
-
-        return author;
+        if (optionalAuthor.isPresent())
+            return optionalAuthor.get();
+        return null;
     }
 
     @Override
@@ -89,90 +68,44 @@ public class MySQLAuthorRepositoryImpl implements AuthorRepository {
         String sql = "SELECT * FROM author WHERE name = ?";
 
         dbUtil.connect();
-
-        PreparedStatement statement = dbUtil.getJdbcConnection().prepareStatement(sql);
-        statement.setString(1, name);
-
-        ResultSet resultSet = statement.executeQuery();
-
-        if (resultSet.next()) {
-            int author_id = resultSet.getInt("id");
-            String description = resultSet.getString("second_name");
-            Date date = resultSet.getDate("date_of_birth");
-            LocalDate dateOfBirth = LocalDate.parse(date.toString());
-            author = new Author(author_id, name, description, dateOfBirth);
+        try (PreparedStatement statement = dbUtil.getJdbcConnection().prepareStatement(sql)) {
+            statement.setString(1, name);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int authorId = resultSet.getInt(ID);
+                    String description = resultSet.getString(SECOND_NAME);
+                    Date date = resultSet.getDate(DATE_OF_BIRTH);
+                    LocalDate authorDateOfBirth = LocalDate.parse(date.toString());
+                    author = new Author(authorId, name, description, authorDateOfBirth);
+                }
+            }
         }
         if (author == null) {
             return author;
         }
         sql = "SELECT relation_table.book_id, book.name FROM relation_table cross join book on book.id = relation_table.book_id " +
                 "where relation_table.author_id = " + author.getId() + ";";
-        statement = dbUtil.getJdbcConnection().prepareStatement(sql);
-//        statement.setInt(1, author.getId());
-        resultSet = statement.executeQuery(sql);
-        while (resultSet.next()) {
-            int book_id = resultSet.getInt("book_id");
-            String book_name = resultSet.getString("name");
-            author.getBooks().put(book_id, book_name);
+        try (Statement statement = dbUtil.getJdbcConnection().prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery(sql)) {
+            while (resultSet.next()) {
+                int bookId = resultSet.getInt(BOOK_ID);
+                String bookName = resultSet.getString(NAME);
+                author.getBooks().put(bookId, bookName);
+            }
         }
-        resultSet.close();
-        statement.close();
-
-        return author;
-    }
-
-    public Author read(String email, String password) throws SQLException {
-        Author author = null;
-        String sql = "SELECT * FROM author WHERE email = ? and password = ?";
-
-        dbUtil.connect();
-
-        PreparedStatement statement = dbUtil.getJdbcConnection().prepareStatement(sql);
-        statement.setString(1, email);
-        statement.setString(2, password);
-        ResultSet resultSet = statement.executeQuery();
-
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            int id = Integer.parseInt(resultSet.getString("author_id"));
-        }
-
-        resultSet.close();
-        statement.close();
-        System.out.println(author);
         return author;
     }
 
     @Override
-    public boolean update(Author author) throws SQLException {
-        String sql = "UPDATE author SET name = ?, password = ?, email = ?";
-        sql += " WHERE author_id = ?";
-        dbUtil.connect();
-
-        PreparedStatement statement = dbUtil.getJdbcConnection().prepareStatement(sql);
-        statement.setString(1, author.getName());
-        statement.setInt(4, author.getId());
-
-        boolean rowUpdated = statement.executeUpdate() > 0;
-        statement.close();
-        dbUtil.disconnect();
-        return rowUpdated;
+    public boolean update(Author item) throws SQLException {
+        return false;
     }
 
     @Override
     public boolean delete(int id) throws SQLException {
-        String sql = "DELETE FROM author where author_id = ?";
-
-        dbUtil.connect();
-
-        PreparedStatement statement = dbUtil.getJdbcConnection().prepareStatement(sql);
-        statement.setInt(1, id);
-
-        boolean rowDeleted = statement.executeUpdate() > 0;
-        statement.close();
-        dbUtil.disconnect();
-        return rowDeleted;
+        return false;
     }
+
 
     @Override
     public List<Author> getAll() throws SQLException {
@@ -180,33 +113,31 @@ public class MySQLAuthorRepositoryImpl implements AuthorRepository {
         Map<Integer, Author> mapAuthor = new HashMap<>();
         String sql = "SELECT * FROM author";
         dbUtil.connect();
-        Statement statement = dbUtil.getJdbcConnection().createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
-
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String description = resultSet.getString("second_name");
-            Date date = resultSet.getDate("date_of_birth");
-            LocalDate dateOfBirth = LocalDate.parse(date.toString());
-            Author author = new Author(id, name, description, dateOfBirth);
-            listAuthor.add(author);
-            mapAuthor.put(id, author);
-        }
-        sql = "SELECT * FROM relation_table cross join book on book.id = relation_table.book_id;";
-        resultSet = statement.executeQuery(sql);
-        while (resultSet.next()) {
-            int book_id = resultSet.getInt("book_id");
-            int author_id = resultSet.getInt("author_id");
-            String book_name = resultSet.getString("name");
-            if (mapAuthor.containsKey(author_id)) {
-                mapAuthor.get(author_id).getBooks().put(book_id, book_name);
+        try (Statement statement = dbUtil.getJdbcConnection().createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+            while (resultSet.next()) {
+                int id = resultSet.getInt(ID);
+                String authorName = resultSet.getString(NAME);
+                String description = resultSet.getString(SECOND_NAME);
+                Date date = resultSet.getDate(DATE_OF_BIRTH);
+                LocalDate authorDateOfBirth = LocalDate.parse(date.toString());
+                Author author = new Author(id, authorName, description, authorDateOfBirth);
+                listAuthor.add(author);
+                mapAuthor.put(id, author);
             }
         }
-
-        resultSet.close();
-        statement.close();
-
+        sql = "SELECT * FROM relation_table cross join book on book.id = relation_table.book_id;";
+        try (Statement statement = dbUtil.getJdbcConnection().createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+            while (resultSet.next()) {
+                int bookId = resultSet.getInt(BOOK_ID);
+                int authorId = resultSet.getInt(AUTHOR_ID);
+                String bookName = resultSet.getString(NAME);
+                if (mapAuthor.containsKey(authorId)) {
+                    mapAuthor.get(authorId).getBooks().put(bookId, bookName);
+                }
+            }
+        }
         dbUtil.disconnect();
 
         return listAuthor;

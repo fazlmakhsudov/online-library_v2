@@ -13,13 +13,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 @WebServlet(
         name = "book-controller",
         urlPatterns = "/books"
 )
 public class BookServlet extends HttpServlet {
-    private BookService bookService = new BookServiceImpl(new MySQLBookRepositoryImpl());
+    private final BookService bookService = new BookServiceImpl(new MySQLBookRepositoryImpl());
+    private static final String REFER_TO_PAGE = "refer_to_page";
+    private static final String LIST_BOOKS = "list_books";
+    private static final String BOOK = "book";
+    private static final String ID = "id";
+    private final Logger logger = Logger.getLogger("BookServlet");
 
     public BookService getBookService() {
         return bookService;
@@ -30,44 +36,39 @@ public class BookServlet extends HttpServlet {
 
         try {
             this.execute(request);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            String referToPage = (String) request.getAttribute(REFER_TO_PAGE);
+            request.removeAttribute(REFER_TO_PAGE);
+            request.getRequestDispatcher(referToPage).forward(request, response);
+        } catch (Exception e) {
+            logger.info(e.toString());
         }
-        String refer_to_page = (String) request.getAttribute("refer_to_page");
-        request.removeAttribute("refer_to_page");
-        request.getRequestDispatcher(
-                refer_to_page).forward(request, response);
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
-    }
 
     private HttpServletRequest execute(HttpServletRequest request) throws SQLException {
         String action = "main";
-        if (request.getParameter("id") != null) {
+        if (request.getParameter(ID) != null) {
             action = "bookDetail";
         }
 
-        request.removeAttribute("list_books");
-        request.removeAttribute("book");
+        request.removeAttribute(LIST_BOOKS);
+        request.removeAttribute(BOOK);
 
-        String refer_to_page = Path.MAIN_PAGE;
+        String referToPage = Path.MAIN_PAGE;
         switch (action) {
             case "main":
-                request.setAttribute("list_books", bookService.findAll());
+                request.setAttribute(LIST_BOOKS, bookService.findAll());
                 break;
             case "bookDetail":
-                int id = Integer.parseInt(request.getParameter("id"));
+                int id = Integer.parseInt(request.getParameter(ID));
                 Book book = bookService.find(id);
-                request.setAttribute("book", book);
-                refer_to_page = Path.BOOK_DETAIL_PAGE;
+                request.setAttribute(BOOK, book);
+                referToPage = Path.BOOK_DETAIL_PAGE;
                 break;
             default:
                 break;
         }
-        request.setAttribute("refer_to_page", refer_to_page);
+        request.setAttribute(REFER_TO_PAGE, referToPage);
         return request;
     }
 }

@@ -1,8 +1,8 @@
-FROM tomcat:8.5.16-jre8-alpine
+FROM tomcat:8.5.47
 
 MAINTAINER Fazliddin Makhsudov "fazl.makhsudov@gmail.com"
 
-ADD target/online-library.war /usr/local/tomcat/webapps/
+ADD target/library.war /usr/local/tomcat/webapps/library.war
 
 EXPOSE 8080
 

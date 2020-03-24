@@ -20,9 +20,6 @@ public class AuthorServiceImpl implements AuthorService {
         return authorRepository.create(item);
     }
 
-    public boolean add(String email, String password) throws SQLException {
-        return authorRepository.create(email, password);
-    }
 
     public Author find(int id) throws SQLException {
         return authorRepository.read(id);
@@ -32,9 +29,6 @@ public class AuthorServiceImpl implements AuthorService {
         return authorRepository.read(name);
     }
 
-    public Author find(String email, String password) throws SQLException {
-        return authorRepository.read(email, password);
-    }
 
     public boolean save(Author item) throws SQLException {
         return authorRepository.update(item);

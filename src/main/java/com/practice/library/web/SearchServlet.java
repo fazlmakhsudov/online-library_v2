@@ -17,60 +17,60 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Optional;
+import java.util.logging.Logger;
 
 @WebServlet(
         name = "search-controller",
         urlPatterns = "/search"
 )
 public class SearchServlet extends HttpServlet {
-    private AuthorService authorService = new AuthorServiceImpl(new MySQLAuthorRepositoryImpl());
-    private BookService bookService = new BookServiceImpl(new MySQLBookRepositoryImpl());
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        super.doGet(request, response);
-    }
+    private final AuthorService authorService = new AuthorServiceImpl(new MySQLAuthorRepositoryImpl());
+    private final BookService bookService = new BookServiceImpl(new MySQLBookRepositoryImpl());
+    private static final String REFER_TO_PAGE = "refer_to_page";
+    private static final String BOOK = "book";
+    private static final String AUTHOR = "author";
+    private static final String NOTHING_FOUND = "nothing_found";
+    private static final String NAME = "name";
+    private final Logger logger = Logger.getLogger("SearchServlet");
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             this.execute(request);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            String referToPage = (String) request.getAttribute(REFER_TO_PAGE);
+            request.removeAttribute(REFER_TO_PAGE);
+            request.getRequestDispatcher(referToPage).forward(request, response);
+        } catch (Exception e) {
+            logger.info(e.toString());
         }
-        String refer_to_page = (String) request.getAttribute("refer_to_page");
-        request.removeAttribute("refer_to_page");
-        request.getRequestDispatcher(
-                refer_to_page).forward(request, response);
     }
 
     private HttpServletRequest execute(HttpServletRequest request) throws SQLException {
-        request.removeAttribute("book");
-        request.removeAttribute("author");
-        request.removeAttribute("nothing_found");
-
-        String name = request.getParameter("name");
-        if (name == null && name.isEmpty()) {
+        request.removeAttribute(BOOK);
+        request.removeAttribute(AUTHOR);
+        request.removeAttribute(NOTHING_FOUND);
+        Optional<String> optionalName = Optional.of(request.getParameter(NAME));
+        if (optionalName.orElse("nothing").compareTo("nothing") == 0) {
             return request;
         }
-        String refer_to_page = Path.SEARCH_BY_NAME_PAGE;
-        name = name.trim();
-        Book book = bookService.find(name);
+        String referToPage = Path.SEARCH_BY_NAME_PAGE;
+        Book book = bookService.find(optionalName.get().trim());
         if (book != null) {
-            request.setAttribute("book", book);
-            refer_to_page = Path.BOOK_DETAIL_PAGE;
-            request.setAttribute("refer_to_page", refer_to_page);
+            request.setAttribute(BOOK, book);
+            referToPage = Path.BOOK_DETAIL_PAGE;
+            request.setAttribute(REFER_TO_PAGE, referToPage);
             return request;
         }
-        Author author = authorService.find(name);
+        Author author = authorService.find(NAME);
         if (author != null) {
-            request.setAttribute("author", author);
-            refer_to_page = Path.AUTHOR_DETAIL_PAGE;
-            request.setAttribute("refer_to_page", refer_to_page);
+            request.setAttribute(AUTHOR, author);
+            referToPage = Path.AUTHOR_DETAIL_PAGE;
+            request.setAttribute(REFER_TO_PAGE, referToPage);
             return request;
         }
-        request.setAttribute("refer_to_page", refer_to_page);
-        request.setAttribute("nothing_found", "nothing was found, repeat your query spelling properly");
+        request.setAttribute(REFER_TO_PAGE, referToPage);
+        request.setAttribute(NOTHING_FOUND, "nothing was found, repeat your query spelling properly");
         return request;
     }
 }
