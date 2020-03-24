@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.logging.Logger;
 
 @WebServlet(
@@ -21,7 +20,6 @@ import java.util.logging.Logger;
 )
 public class AuthorServlet extends HttpServlet {
     private final AuthorService authorService = new AuthorServiceImpl(new MySQLAuthorRepositoryImpl());
-    private static final String REFER_TO_PAGE = "refer_to_page";
     private static final String LIST_AUTHORS = "list_authors";
     private static final String AUTHOR = "author";
     private static final String ID = "id";
@@ -34,39 +32,31 @@ public class AuthorServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            this.execute(request);
-            String referToPage = (String) request.getAttribute(REFER_TO_PAGE);
-            request.removeAttribute(REFER_TO_PAGE);
+            request.removeAttribute(LIST_AUTHORS);
+            request.removeAttribute(AUTHOR);
+
+            String action = "main";
+            if (request.getParameter(ID) != null) {
+                action = "authorDetail";
+            }
+            String referToPage = Path.MAIN_PAGE;
+            switch (action) {
+                case LIST_AUTHORS:
+                    request.setAttribute(LIST_AUTHORS, authorService.findAll());
+                    break;
+                case "authorDetail":
+                    int id = Integer.parseInt(request.getParameter(ID));
+                    Author author = authorService.find(id);
+                    request.setAttribute(AUTHOR, author);
+                    referToPage = Path.AUTHOR_DETAIL_PAGE;
+                    break;
+                default:
+                    break;
+            }
+
             request.getRequestDispatcher(referToPage).forward(request, response);
         } catch (Exception e) {
             logger.info(e.toString());
         }
-    }
-
-    private HttpServletRequest execute(HttpServletRequest request) throws SQLException {
-        request.removeAttribute(LIST_AUTHORS);
-        request.removeAttribute(AUTHOR);
-
-
-        String action = "main";
-        if (request.getParameter(ID) != null) {
-            action = "authorDetail";
-        }
-        String referToPage = Path.MAIN_PAGE;
-        switch (action) {
-            case LIST_AUTHORS:
-                request.setAttribute(LIST_AUTHORS, authorService.findAll());
-                break;
-            case "authorDetail":
-                int id = Integer.parseInt(request.getParameter(ID));
-                Author author = authorService.find(id);
-                request.setAttribute(AUTHOR, author);
-                referToPage = Path.AUTHOR_DETAIL_PAGE;
-                break;
-            default:
-                break;
-        }
-        request.setAttribute(REFER_TO_PAGE, referToPage);
-        return request;
     }
 }
