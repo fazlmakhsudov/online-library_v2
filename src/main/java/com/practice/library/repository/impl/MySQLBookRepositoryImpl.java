@@ -23,8 +23,43 @@ public class MySQLBookRepositoryImpl implements BookRepository {
 
 
     @Override
-    public int create(Book item) throws SQLException {
-        return 0;
+    public int create(Book book) throws SQLException {
+        dbUtil.connect();
+        boolean rowInserted = false;
+        try (Statement statement = dbUtil.getJdbcConnection().createStatement()) {
+            statement.executeQuery("set autocommit=0;");
+            statement.executeQuery("Start transaction;");
+        }
+        String sql = "INSERT INTO book (name, description, date_of_publish) VALUES (?, ?, ?);";
+        try (PreparedStatement preparedStatement = dbUtil.getJdbcConnection().prepareStatement(sql)) {
+            preparedStatement.setString(1, book.getName());
+            preparedStatement.setString(2, book.getDescription());
+            LocalDate date = book.getDateOfPublish();
+            preparedStatement.setString(3, date.toString());
+            rowInserted = preparedStatement.executeUpdate() > 0;
+        }
+        sql = "INSERT INTO relation_table (book_id, author_id) VALUES (?, ?);";
+        try (PreparedStatement preparedStatement = dbUtil.getJdbcConnection().prepareStatement(sql)) {
+            for (Integer author_id : book.getAuthors().keySet()) {
+                preparedStatement.setInt(1, book.getId());
+                preparedStatement.setInt(2, author_id);
+                rowInserted = rowInserted && (preparedStatement.executeUpdate() > 0);
+                preparedStatement.clearParameters();
+            }
+        }
+        try (Statement statement = dbUtil.getJdbcConnection().createStatement()) {
+            if (!rowInserted) {
+                statement.executeQuery("rollback;");
+            } else {
+                statement.executeQuery("commit;");
+            }
+            statement.executeQuery("set autocommit=1;");
+        }
+        dbUtil.disconnect();
+        if (rowInserted) {
+            return book.getId();
+        }
+        return -1;
     }
 
     @Override
@@ -92,13 +127,33 @@ public class MySQLBookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public boolean update(Book item) throws SQLException {
-        return false;
+    public boolean update(Book book) throws SQLException {
+        String sql = "UPDATE book SET name = ?, description = ?, date_of_publish = ?";
+        sql += " WHERE book.id = ?";
+        dbUtil.connect();
+        boolean rowUpdated = false;
+        try (PreparedStatement statement = dbUtil.getJdbcConnection().prepareStatement(sql)) {
+            statement.setString(1, book.getName());
+            statement.setString(2, book.getDescription());
+            statement.setString(3, book.getDateOfPublish().toString());
+            rowUpdated = statement.executeUpdate() > 0;
+        }
+        dbUtil.disconnect();
+        return rowUpdated;
     }
 
     @Override
     public boolean delete(int id) throws SQLException {
-        return false;
+        String sql = "DELETE FROM book where book.id = ?";
+
+        dbUtil.connect();
+        boolean rowDeleted = false;
+        try (PreparedStatement statement = dbUtil.getJdbcConnection().prepareStatement(sql)) {
+            statement.setInt(1, id);
+            rowDeleted = statement.executeUpdate() > 0;
+        }
+        dbUtil.disconnect();
+        return rowDeleted;
     }
 
 

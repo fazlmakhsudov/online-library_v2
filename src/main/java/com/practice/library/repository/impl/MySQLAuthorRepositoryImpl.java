@@ -24,8 +24,22 @@ public class MySQLAuthorRepositoryImpl implements AuthorRepository {
 
 
     @Override
-    public int create(Author item) throws SQLException {
-        return 0;
+    public int create(Author author) throws SQLException {
+        String sql = "INSERT INTO author (name, second_name, date_of_birth) VALUES ( ?, ?, ?)";
+        dbUtil.connect();
+        boolean rowInserted = false;
+        try (PreparedStatement statement = dbUtil.getJdbcConnection().prepareStatement(sql)) {
+            statement.setString(1, author.getName());
+            statement.setString(2, author.getSecondName());
+            statement.setString(3, author.getDateOfBirth().toString());
+
+            rowInserted = statement.executeUpdate() > 0;
+        }
+        dbUtil.disconnect();
+        if (rowInserted) {
+            return author.getId();
+        }
+        return -1;
     }
 
     @Override
@@ -97,13 +111,31 @@ public class MySQLAuthorRepositoryImpl implements AuthorRepository {
     }
 
     @Override
-    public boolean update(Author item) throws SQLException {
-        return false;
+    public boolean update(Author author) throws SQLException {
+        String sql = "UPDATE author SET name = ?, second_name = ?, date_of_birth = ? WHERE id = ?";
+        dbUtil.connect();
+        boolean updatedRaw = false;
+        try (PreparedStatement statement = dbUtil.getJdbcConnection().prepareStatement(sql)) {
+            statement.setString(1, author.getName());
+            statement.setString(2, author.getSecondName());
+            statement.setString(3, author.getDateOfBirth().toString());
+            statement.setInt(4, author.getId());
+            updatedRaw = statement.executeUpdate() > 0;
+        }
+        dbUtil.disconnect();
+        return updatedRaw;
     }
 
     @Override
     public boolean delete(int id) throws SQLException {
-        return false;
+        dbUtil.connect();
+        boolean rowDeleted = false;
+        try (PreparedStatement statement = dbUtil.getJdbcConnection().prepareStatement("DELETE FROM author where author.id = ?")) {
+            statement.setInt(1, id);
+            rowDeleted = statement.executeUpdate() > 0;
+        }
+        dbUtil.disconnect();
+        return rowDeleted;
     }
 
 
