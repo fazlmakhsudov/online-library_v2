@@ -62,7 +62,7 @@ public class SearchServlet extends HttpServlet {
             request.setAttribute(REFER_TO_PAGE, referToPage);
             return request;
         }
-        Author author = authorService.find(NAME);
+        Author author = authorService.find(optionalName.get().trim());
         if (author != null) {
             request.setAttribute(AUTHOR, author);
             referToPage = Path.AUTHOR_DETAIL_PAGE;

@@ -41,6 +41,7 @@ public class BookServlet extends HttpServlet {
             request.getRequestDispatcher(referToPage).forward(request, response);
         } catch (Exception e) {
             logger.info(e.toString());
+            e.printStackTrace();
         }
     }
 
