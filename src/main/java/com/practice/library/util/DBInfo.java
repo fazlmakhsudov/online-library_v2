@@ -14,7 +14,7 @@ public class DBInfo {
     }
 
     static {
-        jdbcURL = "jdbc:mysql://localhost:3306/new_db";
+        jdbcURL = "jdbc:mysql://db:3306/new_db";
         jdbcUsername = "root";
         maxTotalConn = 10;
         logger.log(Level.INFO, "{0} - static block {1}   {2}   {3}", new String[]{logger.getName(), jdbcURL, jdbcUsername, jdbcPassword});

@@ -18,7 +18,10 @@ services:
 
   #MySQL Service
   db:
-    image: mysql:latest
+#     build:
+#       context: ./dump/ 
+#       dockerfile: Dockerfile
+    image: mysql:latest 
     container_name: db
     restart: unless-stopped
     tty: true
@@ -31,6 +34,7 @@ services:
       SERVICE_NAME: mysql
     volumes:
         - ./dump/:/docker-entrypoint-initdb.d/
+        - ./dump/mysql.conf.d/:/etc/mysql/mysql.conf.d/
     networks:
       - app-network
 

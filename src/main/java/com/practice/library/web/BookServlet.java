@@ -27,10 +27,6 @@ public class BookServlet extends HttpServlet {
     private static final String ID = "id";
     private final Logger logger = Logger.getLogger("BookServlet");
 
-    public BookService getBookService() {
-        return bookService;
-    }
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -41,7 +37,6 @@ public class BookServlet extends HttpServlet {
             request.getRequestDispatcher(referToPage).forward(request, response);
         } catch (Exception e) {
             logger.info(e.toString());
-            e.printStackTrace();
         }
     }
 

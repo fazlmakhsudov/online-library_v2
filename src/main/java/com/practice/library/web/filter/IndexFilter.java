@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @WebFilter(filterName = "indexFilter", urlPatterns = {"/"},
-        initParams = @WebInitParam(name = "password", value = "111111frost"))
+        initParams = @WebInitParam(name = "password", value = "123456mfh"))
 public class IndexFilter implements Filter {
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {

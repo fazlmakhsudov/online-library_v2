@@ -12,7 +12,7 @@ public class ConnectionPool {
     private static final String PASSWORD = DBInfo.getJdbcPassword();
     private static final int MAX_TOTAL_CONN = DBInfo.getMaxTotalConn();
 
-    private GenericObjectPool<PoolableConnection> connectionPool = null;
+    private GenericObjectPool<PoolableConnection> genericObjectPool = null;
 
     public DataSource setUp() {
         // Creates a connection factory object which will be use by
@@ -31,23 +31,23 @@ public class ConnectionPool {
 
         // Creates an instance of GenericObjectPool that holds our
         // pool of connections object.
-        connectionPool = new GenericObjectPool<>(pcf);
-        connectionPool.setMaxTotal(ConnectionPool.MAX_TOTAL_CONN);
-        pcf.setPool(connectionPool);
+        genericObjectPool = new GenericObjectPool<>(pcf);
+        genericObjectPool.setMaxTotal(ConnectionPool.MAX_TOTAL_CONN);
+        pcf.setPool(genericObjectPool);
 
-        return new PoolingDataSource<>(connectionPool);
+        return new PoolingDataSource<>(genericObjectPool);
     }
 
-    public GenericObjectPool getConnectionPool() {
-        return connectionPool;
+    public GenericObjectPool getGenericObjectPool() {
+        return genericObjectPool;
     }
 
     /**
      * Prints connection pool status.
      */
-    public void printStatus() {
-        System.out.println("MinIdle   : " + getConnectionPool().getMinIdle() + "; " +
-                "MaxTotal: " + getConnectionPool().getMaxTotal() + "; " +
-                "num idle  : " + getConnectionPool().getNumIdle());
+    public String printStatus() {
+        return "MinIdle   : " + getGenericObjectPool().getMinIdle() + "; " +
+                "MaxTotal: " + getGenericObjectPool().getMaxTotal() + "; " +
+                "num idle  : " + getGenericObjectPool().getNumIdle();
     }
 }
